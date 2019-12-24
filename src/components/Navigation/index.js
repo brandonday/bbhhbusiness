@@ -1,7 +1,37 @@
 import React from 'react';
-const App = () => (
-  <div>
-    <h1>App</h1>
-  </div>
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
+import SignOutButton from '../SignOut';
+
+const Navigation = ({ authUser }) => (
+  <div>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>
 );
-export default App;
+
+const NavigationAuth = () => (
+  <ul>
+    <li>
+      <Link to={ROUTES.MAIN}>MAIN</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.HOME}>Home</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.ACCOUNT}>Account</Link>
+    </li>
+    <li>
+      <SignOutButton />
+    </li>
+  </ul>
+);
+const NavigationNonAuth = () => (
+  <ul>
+    <li>
+      <Link to={ROUTES.MAIN}>MAIN</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+    </li>
+  </ul>
+);
+
+export default Navigation;

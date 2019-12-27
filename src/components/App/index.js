@@ -11,8 +11,31 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import * as ROUTES from '../../constants/routes';
+import { AuthUserContext } from '../Session';
+import { render } from '@testing-library/react';
 
-const App = () => (
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      authUser: null,
+    };
+  }
+  componentDidMount() {
+    this.props.firebase.auth.onAuthStateChanged(authUser => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
+  }
+  componentWillUnmount() {
+    this.listener();
+  }
+render() {
+  return(
+    <AuthUserContext.Provider value={this.state.authUser}>
+
   <Router>
     <div>
       <Navigation />
@@ -29,6 +52,10 @@ const App = () => (
       <Route path={ROUTES.ADMIN} component={AdminPage} />
     </div>
   </Router>
-);
+  </AuthUserContext.Provider>
+
+  )
+};
+}
 
 export default withFirebase(App);

@@ -21,6 +21,14 @@ import Container from '@material-ui/core/Container';
 const INITIAL_STATE = {
   username: '',
   email: '',
+  dob:'',
+  firstName:'',
+  lastName:'',
+  phone:'',
+  instagram:'',
+  onlyfans:'',
+  snapchat:'',
+  youtube:'',
   passwordOne: '',
   passwordTwo: '',
   error: null,
@@ -48,14 +56,13 @@ const useStyles = makeStyles(theme => ({
 
 const SignUpPage = () => {
   return(<div>
-    <h1>SignUp</h1>
     <SignUpForm/>
   </div>)
 };
 
-const SignUpFormBaseWrap = () => {
+const SignUpFormBaseWrap = (props) => {
   const classes = useStyles();
-  return(<SignUpFormBase classes={classes}/>);
+  return(<SignUpFormBase classes={classes} firebase={props.firebase} history={props.history}/>);
 }
 
 class SignUpFormBase extends Component {
@@ -67,7 +74,20 @@ class SignUpFormBase extends Component {
   }
   
   onSubmit = event => {
-    const { username, email, passwordOne } = this.state;
+    const {   username,
+    email,
+    dob,
+    firstName,
+    lastName,
+    phone,
+    instagram,
+    onlyfans,
+    snapchat,
+    youtube,
+    passwordOne,
+    passwordTwo,
+    error } = this.state;
+    
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
@@ -76,6 +96,16 @@ class SignUpFormBase extends Component {
         .set({
           username,
           email,
+          firstName, 
+          dob,
+          lastName,
+          phone,
+          instagram,
+          onlyfans,
+          snapchat,
+          youtube,
+          passwordOne, 
+          passwordTwo  
         });
       })
       .then(() => {
@@ -94,6 +124,14 @@ class SignUpFormBase extends Component {
     const {
       username,
       email,
+      dob,
+      firstName,
+      lastName,
+      phone,
+      instagram,
+      onlyfans,
+      snapchat,
+      youtube,
       passwordOne,
       passwordTwo,
       error,
@@ -120,28 +158,30 @@ class SignUpFormBase extends Component {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="firstName"
+            label="First Name"
+            name="firstName"
+            autoComplete="First Name"
             autoFocus
-            value={email}
+            value={firstName}
             onChange={this.onChange}
             type="text"
+            style={{marginRight:10}}
           />
            <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
+            id="lastName"
+            label="Last Name"
+            name="lastName"
+            autoComplete="Last Name"
+            
+            value={lastName}
             onChange={this.onChange}
             type="text"
+            style={{marginLeft:10}}
           />
           </div>
           <TextField
@@ -150,10 +190,10 @@ class SignUpFormBase extends Component {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email"
             name="email"
-            autoComplete="email"
-            autoFocus
+            autoComplete="Email"
+         
             value={email}
             onChange={this.onChange}
             type="text"
@@ -163,10 +203,109 @@ class SignUpFormBase extends Component {
             margin="normal"
             required
             fullWidth
-            name="password"
+            id="dob"
+            label="Date of Birth"
+            name="dob"
+            autoComplete="Date of Birth"
+       
+            value={dob}
+            onChange={this.onChange}
+            type="text"
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="phone"
+            label="Phone"
+            name="phone"
+            autoComplete="Phone"
+         
+            value={phone}
+            onChange={this.onChange}
+            type="text"
+          />
+           <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="Username"
+           
+            value={username}
+            onChange={this.onChange}
+            type="text"
+          />
+           <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="Instagram"
+            label="Instagram"
+            name="instagram"
+            autoComplete="Instagram"
+         
+            value={instagram}
+            onChange={this.onChange}
+            type="text"
+          />
+           <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="Onlyfans"
+            label="Onlyfans"
+            name="onlyfans"
+            autoComplete="Onlyfans"
+      
+            value={onlyfans}
+            onChange={this.onChange}
+            type="text"
+          />
+           <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="snapchat"
+            label="Snapchat"
+            name="snapchat"
+            autoComplete="Snapchat"
+           
+            value={snapchat}
+            onChange={this.onChange}
+            type="text"
+          />
+           <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="youtube"
+            label="Youtube"
+            name="youtube"
+            autoComplete="Youtube"
+    
+            value={youtube}
+            onChange={this.onChange}
+            type="text"
+          />
+          
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="passwordOne"
             label="Password"
             type="password"
-            id="password"
+            id="passwordOne"
             autoComplete="current-password"
             value={passwordOne}
             onChange={this.onChange}
@@ -177,9 +316,8 @@ class SignUpFormBase extends Component {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="passwordTwo"
             label="Password"
-            type="password"
             id="password"
             autoComplete="current-password"
             value={passwordTwo}
@@ -202,14 +340,14 @@ class SignUpFormBase extends Component {
             CREATE A NEW ACCOUNT
           </Button>
           <Grid container>
-            <Grid item xs>
+            {/* <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
-            </Grid>
+            </Grid> */}
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link to="/signin" variant="body2">
+                {"Already have an account? Sign In"}
               </Link>
             </Grid>
           </Grid>

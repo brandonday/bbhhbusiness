@@ -10,6 +10,7 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
+import Schedule from '../schedule';
 import * as ROUTES from '../../constants/routes';
 import { AuthUserContext } from '../Session';
 import { render } from '@testing-library/react';
@@ -50,6 +51,7 @@ render() {
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
+      <Route path={ROUTES.SCHEDULE_PAGE} component={Schedule} />
     </div>
   </Router>
   </AuthUserContext.Provider>

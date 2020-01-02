@@ -102,9 +102,10 @@ export class Example extends React.Component {
     this.setState({
       selectedDay: selected ? undefined : day,
     });
+    selection.date = day;
     let days = selection.amountOfDays == undefined ? 1: selection.amountOfDays + 1;
 
-    let string = "You have chosen to run a promo on Hanna's: " + `${selection.platform} ` + ` ${day} ` + "for " + `${days}` + `${ days > 1 ? ' consecutive days ' : ' day ' }` + "for the amount of " + `$${selection.price} USD` + ' giving you ' + selection.hours + ' hours of promotion';
+    let string = "You have chosen to run a promo on Hanna's: " + `${selection.platform} ` + ` ${selection.date} ` + "for " + `${days}` + `${ days > 1 ? ' consecutive days ' : ' day ' }` + "for the amount of " + `$${selection.price} USD` + ' giving you ' + selection.hours + ' hours of promotion';
     string = string.toString();
     //alert(string)
     this.setState({string})
@@ -118,6 +119,10 @@ export class Example extends React.Component {
           <DayPicker
             selectedDays={this.state.selectedDay}
             onDayClick={this.handleDayClick}
+            modifiers={ { 
+              disabled: { daysOfWeek: [0] }, 
+            
+            }} 
           />
             <p>
             {this.state.selectedDay

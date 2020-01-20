@@ -21,7 +21,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 const SignInPage = () => (
   <div>
-    <h1>SignIn</h1>
+    {/* <h1>SignIn</h1> */}
     <SignInForm />
     {/* <PasswordForgetLink /> */}
 
@@ -109,9 +109,9 @@ class SignInFormBase extends Component {
   {/* <Avatar className={classes.avatar}> */}
     {/* <LockOutlinedIcon /> */}
   {/* </Avatar> */}
-  <Typography component="h1" variant="h5">
+  {/* <Typography component="h1" variant="h5">
     Sign In
-  </Typography>
+  </Typography> */}
   <form className={this.props.classes.form} onSubmit={this.onSubmit} noValidate>
     {/* <div style={{display:'flex'}}>
     <TextField
@@ -171,7 +171,7 @@ class SignInFormBase extends Component {
       autoFocus
       value={password}
       onChange={this.onChange}
-      type="text"
+      type="password"
     />
 
 

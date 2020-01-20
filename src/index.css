@@ -11,3 +11,78 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  font-family: sans-serif;
+  text-align: flex-start;
+}
+
+p {
+  margin: 0;
+
+}
+
+input[type="file"] {
+  border: 2px solid #333;
+  display: none;
+}
+
+input[type="file"] + label {
+  padding: 5px;
+  border-radius: 2px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: plum;
+  border: 2px solid #333;
+}
+
+button[type="submit"] {
+  padding: 5px;
+  background-color: aquamarine;
+  border: 2px solid #333;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.MuiAppBar-colorPrimary {
+ 
+  background-color: #f35aee !important;
+}
+
+hr {
+  border:none;
+}
+.makeStyles-submit-124 {
+  background-color: #7fb2ff !important;
+  border:none !important;
+}
+
+.makeStyles-submit-359, .MuiButton-root, .MuiButton-contained, .makeStyles-submit-124, .MuiButton-containedPrimary, .MuiButton-fullWidth {
+  background-color: #7fb2ff !important;
+  border:none !important;
+}
+
+.makeStyles-card-150 {
+  height:auto !important;
+  max-width: 300px;
+}
+
+.MuiFab-root {
+
+  height:42px !important;
+
+}
+
+.MuiFab-secondary {
+  background-color: #f35aee !important;
+}
+
+.makeStyles-media-151 {
+  height: 300px !important;
+  background-size: contain;
+}
+
+.MuiCardActionArea-root {
+  padding-top: 20px !important;
+}

@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
 
 const firebaseConfig = {
     apiKey: "AIzaSyB7cG8PE9KgB153DQUOl5aQIawxrTz9mLE",
@@ -17,6 +18,8 @@ class Firebase {
     app.initializeApp(firebaseConfig);
     this.auth = app.auth();
     this.db = app.database();
+    this.storage = app.storage().ref();
+
   }
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
@@ -33,5 +36,8 @@ class Firebase {
   
   user = uid => this.db.ref(`users/${uid}`);
   users = () => this.db.ref('users');
+  database = () => this.db;
+  storage = () => this.storage;
+  auth = () => this.auth;
 }
 export default Firebase;

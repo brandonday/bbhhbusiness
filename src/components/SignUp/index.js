@@ -149,7 +149,7 @@ class SignUpFormBase extends Component {
           {/* <LockOutlinedIcon /> */}
         {/* </Avatar> */}
         <Typography component="h1" variant="h5">
-          Sign Up
+          {/* Sign Up */}
         </Typography>
         <form className={this.props.classes.form} onSubmit={this.onSubmit} noValidate>
           <div style={{display:'flex'}}>

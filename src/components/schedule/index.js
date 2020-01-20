@@ -22,8 +22,17 @@ import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
 import CardMedia from '@material-ui/core/CardMedia';
-let selection = []
 
+import { withFirebase } from '../Firebase';
+
+import * as ROUTES from '../../constants/routes';
+  
+import Hashids from 'hashids'
+const hashids = new Hashids()
+
+let selection = []
+let month = ["January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"];
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -97,19 +106,54 @@ export class Example extends React.Component {
       string:''
     };
   }
+  componentDidMount() {
+    
+    
+  }
 
   handleDayClick(day, { selected }) {
     this.setState({
       selectedDay: selected ? undefined : day,
     });
+    
+
+    var todayTime = new Date(day);
+    var month_ = todayTime.getMonth();
+    var day_ = todayTime.getDate();
+    var year = todayTime.getFullYear();
+  
     selection.date = day;
     let days = selection.amountOfDays == undefined ? 1: selection.amountOfDays + 1;
 
-    let string = "You have chosen to run a promo on Hanna's: " + `${selection.platform} ` + ` ${selection.date} ` + "for " + `${days}` + `${ days > 1 ? ' consecutive days ' : ' day ' }` + "for the amount of " + `$${selection.price} USD` + ' giving you ' + selection.hours + ' hours of promotion';
+    let string = "You have chosen to run a promo on Hannah's: " + `${selection.platform} ` + ` ${selection.date} ` + "for " + `${days}` + `${ days > 1 ? ' consecutive days ' : ' day ' }` + "for the amount of " + `$${selection.price} USD` + ' giving you ' + selection.hours + ' hours of promotion';
     string = string.toString();
     //alert(string)
-    this.setState({string})
- 
+    this.setState({string});
+
+    // this.props.firebase.database().ref(`/${month[month_]}/`).once('value').then((snapshot)=> {
+    //   //snapshot.val().day
+    //   if(snapshot.val() == null) {
+    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set({
+    //           day:day_,
+    //           hoursLeftForPromo:24 - selection.hours
+    //       });
+    //   } else {
+    //     let date = snapshot.val();
+    //     if(date[`${day_}`].hoursLeftForPromo != 0) {
+    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set(
+    //         {
+    //           day:day_,
+    //           hoursLeftForPromo:date[`${day_}`].hoursLeftForPromo - selection.hours
+    //         }
+    //       );
+    //     }
+    //   }
+    // });
+
+
+   localStorage.setItem("schedule", JSON.stringify({month:`${month[month_]}`,platform:selection.platform,date:selection.date,days:days,price:selection.price,hours:selection.hours,day:day}))
+     
+  
   }
 
   render() {
@@ -119,10 +163,10 @@ export class Example extends React.Component {
           <DayPicker
             selectedDays={this.state.selectedDay}
             onDayClick={this.handleDayClick}
-            modifiers={ { 
-              disabled: { daysOfWeek: [0] }, 
+       
+            initialMonth={new Date()}
+          
             
-            }} 
           />
             <p>
             {this.state.selectedDay
@@ -132,7 +176,8 @@ export class Example extends React.Component {
         </div>
       </div>
     );
-  }
+    
+  }   
 }
 
 export function ControlledExpansionPanels(props) {
@@ -156,13 +201,13 @@ export function ControlledExpansionPanels(props) {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography className={classes.heading}>{props.hours}</Typography>
+          <Typography className={classes.heading}>{props.hours} hours</Typography>
           <Typography className={classes.secondaryHeading}>${props.price} USD</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <div style={{display:'flex',justifyContent:'center',flexDirection:'column', alignItems:'center', width:'100%'}}>
             <div>
-              <Example />
+              <Basic />
             </div>
           </div>
         </ExpansionPanelDetails>
@@ -256,17 +301,18 @@ export function Schedule(props) {
   const [chosen, setChosen] = React.useState('');
   const classes = useStyles();
   return (
-    <div style={{display:'flex',justifyContent:'center'}}>
+    <div style={{display:'flex',justifyContent:'center',padding:'0 50px'}}>
       <div style={{width:'100%',maxWidth:500}}>
         <Card className={classes.card}>
           <SimpleTabs image={'https://ed-projects.com/wp-content/uploads//instagram.jpg'} platform={'instagram'}/>
           <div style={{display:'flex',width:'100%',justifyContent:'center',padding:'15px 0px'}}>
-            <div style={{display:'flex',flexDirection:'column', maxWidth:400, width:'100%'}}>
+            <div style={{display:'flex',flexDirection:'column', maxWidth:330, width:'100%'}}>
             <div style={{maxWidth:800, width:'100%'}}>
               {chosen}
             </div>
             <Button onClick={()=>{
-          
+               localStorage.setItem("promoInfo", JSON.stringify({}))
+               window.location.replace('/payment');
 
             }} variant="contained" color="primary">CHOOSE</Button>
             <div>
@@ -275,18 +321,33 @@ export function Schedule(props) {
             </div>
           </div>
         </Card>
-        <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}><p>or</p></div>
+        <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}><h1>or</h1></div>
+        
         <Card className={classes.card}>
-          <SimpleTabs image={'https://upload.wikimedia.org/wikipedia/commons/0/0a/OnlyFans_logo_3.jpg'} platform={'onlyfans'}/>
-          <div style={{display:'flex',width:'100%',justifyContent:'center'}}>
-            <Button variant="contained" color="primary">CHOOSE</Button>
-            {chosen}
+        <SimpleTabs image={'https://upload.wikimedia.org/wikipedia/commons/0/0a/OnlyFans_logo_3.jpg'} platform={'onlyfans'}/>
+          <div style={{display:'flex',width:'100%',justifyContent:'center',padding:'15px 0px'}}>
+            <div style={{display:'flex',flexDirection:'column', maxWidth:330, width:'100%'}}>
+            <div style={{maxWidth:800, width:'100%'}}>
+              {chosen}
+            </div>
+            <Button onClick={()=>{
+               localStorage.setItem("promoInfo", JSON.stringify({}))
+               window.location.replace('/payment');
+
+            }} variant="contained" color="primary">CHOOSE</Button>
+            <div>
+              
+            </div>
+            </div>
           </div>
         </Card>
+
       </div>
     </div>
   )
 };
+
+const Basic = withFirebase(Example);
 
 const condition = authUser => !!authUser;
 export default withAuthorization(condition)(Schedule);

@@ -11,6 +11,9 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import Schedule from '../schedule';
+
+import Create from '../create';
+import Payment from '../payment';
 import * as ROUTES from '../../constants/routes';
 import { AuthUserContext } from '../Session';
 import { render } from '@testing-library/react';
@@ -41,17 +44,19 @@ render() {
     <div>
       <Navigation />
       <hr />
-      <Route exact path={ROUTES.MAIN} component={Main} />
+      <Route exact path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route
         path={ROUTES.PASSWORD_FORGET}
         component={PasswordForgetPage}
       />
-      <Route path={ROUTES.HOME} component={HomePage} />
+     
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
       <Route path={ROUTES.SCHEDULE_PAGE} component={Schedule} />
+      <Route path={ROUTES.POST_CREATION} component={Create} />
+      <Route path={ROUTES.PAYMENT} component={Payment} />
     </div>
   </Router>
   </AuthUserContext.Provider>

@@ -65,6 +65,7 @@ function Create(props) {
   const forceUpdate = useForceUpdate();
   const classes = useStyles()
   const [count, setCount] = useState(0);
+  const [text, setText] = useState('');
 
   useEffect(e => {
     window.addEventListener("keyup", clickFileInput);
@@ -80,7 +81,12 @@ function Create(props) {
       
     }
   }
-
+  
+  let updateInputValue = (evt) => {
+    setText({
+      text: evt.target.value
+    });
+  }
   let onSubmit = (e) => {
     e.preventDefault();
     const data = fileInput.current.files;
@@ -108,6 +114,7 @@ function Create(props) {
         hours:data.hours,
         shortID:shortID,
         approved:false,
+        text:text
       },function(error) {
         if (error) {
           // The write failed...
@@ -123,7 +130,8 @@ function Create(props) {
             price:data.price,
             hours:data.hours,
             shortID:shortID,
-            approved:false
+            approved:false,
+            text:text
           });
           
           //window.location.replace('/home')
@@ -186,6 +194,7 @@ function Create(props) {
       <div style={{width:'100%'}}>
       <div style={{width:'100%', display:'flex',justifyContent:'center',alignItems:'center'}}> 
       <TextField
+          onChange={updateInputValue}
           id="filled-multiline-static"
           label="Post"
           multiline

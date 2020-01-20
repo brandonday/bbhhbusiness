@@ -67,27 +67,31 @@ function MediaCard(props) {
       <CardActions>
         <Button size="small" color="primary" onClick={()=>{
           
-          let userId = props.firebase.auth.currentUser.uid;
 
-          let dataUser = props.firebase.database().ref(`user/${userId}/${props.dataSnapkey}`);
+          let dataUser = props.firebase.database().ref(`user/`);
  
           let dataPending = props.firebase.database().ref(`pending/${props.shortID}`);
           
-          document.getElementById(props.shortID).remove()
-          dataUser.remove();
-          dataPending.remove();
-          window.location.reload()
-          // var userId = props.firebase.auth.currentUser.uid;
-          // props.firebase.database().ref('/user/' + userId).once('value').then(function(snapshot) {
-          //   snapshot.forEach((dataSnapShot)=>{
-
-          //   })
-          // })
+          document.getElementById(props.shortID).remove();
+      
+          
+          props.firebase.database().ref(`/user/${props.userId}`).once('value').then(function(snapshot) {
+            snapshot.forEach((dataSnapShot)=>{
+             if(dataSnapShot.val().shortID === props.dataSnapkey) {
+              dataUser.child(`${props.userId}/${dataSnapShot.key}`).update({approved:'denied'});
+              dataPending.remove()
+             }
+            })
+          }) //move and increment decrement
+          
+          //dataPending.remove();
+          //window.location.reload()
+       
        
         }}>
-          <p>Remove</p>
+          <p>Deny</p>
         </Button>
-        <Button size="small" color="primary" disabled={!props.status ? true : false} onClick={()=>{
+        <Button size="small" color="primary" disabled={props.status ? true : false} onClick={()=>{
            let month = ["January", "February", "March", "April", "May", "June",
            "July", "August", "September", "October", "November", "December"];
           var setTime = new Date(props.date);
@@ -98,6 +102,7 @@ function MediaCard(props) {
             props.firebase.database().ref(`/${month[month_]}/`).once('value').then((snapshot)=> {
             //snapshot.val().day
             let date = snapshot.val();
+            if(date !== null) {
             if(date[`${day_}`] == undefined) {
               props.firebase.database().ref(`/${month[month_]}/${day_}`).set({
                 day:day_,
@@ -119,16 +124,29 @@ function MediaCard(props) {
                 });
               }
             }   
+          }
+
+
           });
 
-          let dataUser = props.firebase.database().ref(`user/`);
+         
          
           let dataPending = props.firebase.database().ref(`pending/`);
-          dataUser.child(`${props.userId}/${props.dataSnapkey}`).update({approved:true});
           //dataPending.remove();
           //document.getElementById(props.shortID).remove()
           //dataUser.remove();
           dataPending.child(`${props.shortID}`).update({approved:true});
+          let dataUser = props.firebase.database().ref(`user/`);
+          props.firebase.database().ref(`/user/${props.userId}`).once('value').then(function(snapshot) {
+            snapshot.forEach((dataSnapShot)=>{
+             if(dataSnapShot.val().shortID === props.dataSnapkey) {
+              dataUser.child(`${props.userId}/${dataSnapShot.key}`).update({approved:true});
+              
+             }
+            })
+          })
+   
+    
           //window.location.reload()
         }}>
           Approve
@@ -139,7 +157,15 @@ function MediaCard(props) {
 
       </CardActions>
     </Card>
-    <div style={{margin:10}}>Status: {!props.status ? 'Awaiting approval...' : 'Approved!'}</div>
+    <div style={{margin:10}}>Status: {(()=>{
+    if(props.status === false) {
+      return 'Awaiting approval...'
+    } else if (props.status === true) {
+      return 'Approved!'
+    } else if(props.status === 'denied') {
+      return 'Denied!'
+    }
+  })()}</div>
     </div>
   );
 }
@@ -154,9 +180,10 @@ const Home = (props) => {
   const load = () => {
     if(items == false) {
       var userId = props.firebase.auth.currentUser.uid;
-      props.firebase.database().ref('/user/' + userId).once('value').then(function(snapshot) {
+      props.firebase.database().ref('/pending').once('value').then(function(snapshot) {
         snapshot.forEach((dataSnapShot)=>{
-          mylist.push(<div id={dataSnapShot.val().shortID} style={{width:300,border:'0px solid black',padding:10}}><MCard text={'post text post text post text post text post text post text post text post text post text post text post text post text post text post text post text'} date={dataSnapShot.val().date} status={true} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key} hoursWanted={dataSnapShot.val().hours} userId={dataSnapShot.val().userId}/></div>)
+          console.log('data',dataSnapShot)
+          mylist.push(<div id={dataSnapShot.val().shortID} style={{width:300,border:'0px solid black',padding:10}}><MCard text={'post text post text post text post text post text post text post text post text post text post text post text post text post text post text post text'} date={dataSnapShot.val().date} status={dataSnapShot.val().approved} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key} hoursWanted={dataSnapShot.val().hours} userId={dataSnapShot.val().userId}/></div>)
         })
         setCount(mylist)
         mylist = []

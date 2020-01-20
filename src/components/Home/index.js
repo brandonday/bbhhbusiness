@@ -27,7 +27,20 @@ const useStyles = makeStyles({
 
 function MediaCard(props) {
   const classes = useStyles();
+  let formatDate = (date) => {
+    var monthNames = [
+      "January", "February", "March",
+      "April", "May", "June", "July",
+      "August", "September", "October",
+      "November", "December"
+    ];
   
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+  
+    return monthNames[monthIndex] + ' ' + day + ' ' + year;
+  }
   return (
     <div>
     <Card className={classes.card}>
@@ -40,7 +53,8 @@ function MediaCard(props) {
         <CardContent>
     
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.text}
+          <p style={{fontWeight:'bold'}}>{formatDate(new Date(props.date))}</p>
+          <p>{props.text.text}</p>
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -73,7 +87,16 @@ function MediaCard(props) {
 
       </CardActions>
     </Card>
-    <div style={{margin:10}}>Status: {!props.status ? 'Awaiting approval...' : 'Approved!'}</div>
+    <div style={{margin:10}}>Status: {(()=>{
+    if(props.status === false) {
+      return 'Awaiting approval...'
+    } else if (props.status === true) {
+      return 'Approved!'
+    } else if(props.status === 'denied') {
+      return 'Denied!'
+    }
+  })()}
+  </div>
     </div>
   );
 }
@@ -90,7 +113,7 @@ const Home = (props) => {
       var userId = props.firebase.auth.currentUser.uid;
       props.firebase.database().ref('/user/' + userId).once('value').then(function(snapshot) {
         snapshot.forEach((dataSnapShot)=>{
-          mylist.push(<div id={dataSnapShot.val().shortID} style={{height:300,width:300,border:'0px solid black',padding:10}}><MCard text={dataSnapShot.val().date} status={dataSnapShot.val().approved} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key}/></div>)
+          mylist.push(<div id={dataSnapShot.val().shortID} style={{width:300,border:'0px solid black',padding:10}}><MCard text={dataSnapShot.val().text} status={dataSnapShot.val().approved} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key} date={dataSnapShot.val().date}/></div>)
         })
         setCount(mylist)
         mylist = []

@@ -86,3 +86,13 @@ hr {
 .MuiCardActionArea-root {
   padding-top: 20px !important;
 }
+
+.makeStyles-card-179 {
+  height:auto !important;
+  max-width: 300px;
+}
+
+.makeStyles-media-180 {
+  height: 267px !important;
+  background-size: contain;
+}

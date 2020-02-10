@@ -144,9 +144,29 @@ function MediaCard(props) {
               
              }
             })
+          }).then(()=>{
+            props.firebase.database().ref(`/${month[month_]}/`).once('value').then((snapshot)=> {
+              //snapshot.val().day
+              if(snapshot.val() == null) {
+                props.firebase.database().ref(`/${month[month_]}/${day_}`).set({
+                  day:day_,
+                  hoursLeftForPromo:24 - props.hoursWanted
+                });
+              } else {
+                let date = snapshot.val();
+                if(date[`${day_}`].hoursLeftForPromo != 0) {
+                  props.firebase.database().ref(`/${month[month_]}/${day_}`).set(
+                    {
+                      day:day_,
+                      hoursLeftForPromo:date[`${day_}`].hoursLeftForPromo - props.hoursWanted
+                    }
+                  );
+                }
+              }
+            });
+
           })
-   
-    
+
           //window.location.reload()
         }}>
           Approve
@@ -183,7 +203,7 @@ const Home = (props) => {
       props.firebase.database().ref('/pending').once('value').then(function(snapshot) {
         snapshot.forEach((dataSnapShot)=>{
           console.log('data',dataSnapShot)
-          mylist.push(<div id={dataSnapShot.val().shortID} style={{width:300,border:'0px solid black',padding:10}}><MCard text={'post text post text post text post text post text post text post text post text post text post text post text post text post text post text post text'} date={dataSnapShot.val().date} status={dataSnapShot.val().approved} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key} hoursWanted={dataSnapShot.val().hours} userId={dataSnapShot.val().userId}/></div>)
+          mylist.push(<div id={dataSnapShot.val().shortID} style={{width:300,border:'0px solid black',padding:10}}><MCard text={dataSnapShot.val().text.text} date={dataSnapShot.val().date} status={dataSnapShot.val().approved} image={dataSnapShot.val().url} shortID={dataSnapShot.val().shortID} dataSnapkey={dataSnapShot.key} hoursWanted={dataSnapShot.val().hours} userId={dataSnapShot.val().userId}/></div>)
         })
         setCount(mylist)
         mylist = []

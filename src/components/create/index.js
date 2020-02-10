@@ -133,6 +133,27 @@ function Create(props) {
             approved:false,
             text:text
           });
+
+          // this.props.firebase.database().ref(`/${month[month_]}/`).once('value').then((snapshot)=> {
+    //   //snapshot.val().day
+    //   if(snapshot.val() == null) {
+    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set({
+    //           day:day_,
+    //           hoursLeftForPromo:24 - selection.hours
+    //       });
+    //   } else {
+    //     let date = snapshot.val();
+    //     if(date[`${day_}`].hoursLeftForPromo != 0) {
+    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set(
+    //         {
+    //           day:day_,
+    //           hoursLeftForPromo:date[`${day_}`].hoursLeftForPromo - selection.hours
+    //         }
+    //       );
+    //     }
+    //   }
+    // });
+
           
           //window.location.replace('/home')
         }

@@ -10,6 +10,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import Fab from '@material-ui/core/Fab';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -149,8 +150,12 @@ const Home = (props) => {
         activeItemIndex={activeItemIndex}
         numberOfCards={1}
         gutter={10}
-        leftChevron={<button>{'<'}</button>}
-        rightChevron={<button>{'>'}</button>}
+        leftChevron={<Fab color="secondary" aria-label="edit">
+        <p style={{fontSize:14}}>{'<'}</p>
+      </Fab>}
+        rightChevron={<Fab color="secondary" aria-label="edit">
+        <p style={{fontSize:14}}>{'>'}</p>
+      </Fab>}
         outsideChevron
         chevronWidth={chevronWidth}
       >

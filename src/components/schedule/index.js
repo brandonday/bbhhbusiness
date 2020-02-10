@@ -101,13 +101,15 @@ export class Example extends React.Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
+    this.handleDate = this.handleDate.bind(this);
     this.state = {
       selectedDay: null,
       string:''
     };
   }
   componentDidMount() {
-    
+    let month = new Date()
+      this.handleDate(month)
     
   }
 
@@ -155,6 +157,18 @@ export class Example extends React.Component {
      
   
   }
+  handleDate(month) {
+    alert(month)
+    this.props.firebase.database().ref(`/${month}/`).once('value').then((snapshot)=> {
+      //snapshot.val().day
+      if(snapshot.val() == null) {
+          snapshot.forEach((DataSnapshot)=>{
+            console.log(DataSnapshot)
+          })
+      } 
+    });
+    alert('ghghgh')
+  }
 
   render() {
     return (
@@ -163,9 +177,9 @@ export class Example extends React.Component {
           <DayPicker
             selectedDays={this.state.selectedDay}
             onDayClick={this.handleDayClick}
-       
+            disabledDays={[new Date('2020-03-22'),new Date('2020-03-18')]}
             initialMonth={new Date()}
-          
+            onMonthChange={this.handleDate()}
             
           />
             <p>

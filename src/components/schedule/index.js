@@ -31,8 +31,10 @@ import Hashids from 'hashids'
 const hashids = new Hashids()
 
 let selection = []
-let month = ["January", "February", "March", "April", "May", "June",
+let monthArr = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December"];
+let isAvail = true;
+let dayC = ''
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -104,12 +106,15 @@ export class Example extends React.Component {
     this.handleDate = this.handleDate.bind(this);
     this.state = {
       selectedDay: null,
-      string:''
+      string:'',
+      full:'',
+      isAvail:true,
+      disable:[]
     };
   }
   componentDidMount() {
-    let month = new Date()
-      this.handleDate(month)
+    let month = new Date().getMonth();
+      this.handleDate(monthArr[month])
     
   }
 
@@ -123,7 +128,32 @@ export class Example extends React.Component {
     var month_ = todayTime.getMonth();
     var day_ = todayTime.getDate();
     var year = todayTime.getFullYear();
-  
+    let ok = true;
+    this.props.firebase.database().ref(`/${monthArr[month_]}/`).once('value').then((snapshot)=> {
+      //snapshot.val().day
+      // alert(day_)
+      if(snapshot.val() != null) {
+          snapshot.forEach((DataSnapshot)=>{
+            console.log('data', DataSnapshot.val().hoursLeftForPromo )
+          
+            if(DataSnapshot.key == day_) {
+              if(DataSnapshot.val().hoursLeftForPromo <= 0) {
+                let string = "Sorry this date is no longer available. Please select another";
+                this.setState({string});
+                isAvail = false;
+              } 
+            }
+       
+
+          })
+          
+         
+      } 
+    });
+    
+    isAvail = true;
+
+ 
     selection.date = day;
     let days = selection.amountOfDays == undefined ? 1: selection.amountOfDays + 1;
 
@@ -131,43 +161,61 @@ export class Example extends React.Component {
     string = string.toString();
     //alert(string)
     this.setState({string});
-
-    // this.props.firebase.database().ref(`/${month[month_]}/`).once('value').then((snapshot)=> {
-    //   //snapshot.val().day
-    //   if(snapshot.val() == null) {
-    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set({
-    //           day:day_,
-    //           hoursLeftForPromo:24 - selection.hours
-    //       });
-    //   } else {
-    //     let date = snapshot.val();
-    //     if(date[`${day_}`].hoursLeftForPromo != 0) {
-    //       this.props.firebase.database().ref(`/${month[month_]}/${day_}`).set(
-    //         {
-    //           day:day_,
-    //           hoursLeftForPromo:date[`${day_}`].hoursLeftForPromo - selection.hours
-    //         }
-    //       );
-    //     }
-    //   }
-    // });
-
-
-   localStorage.setItem("schedule", JSON.stringify({month:`${month[month_]}`,platform:selection.platform,date:selection.date,days:days,price:selection.price,hours:selection.hours,day:day}))
-     
+    localStorage.setItem("schedule", JSON.stringify({month:`${monthArr[month_]}`,platform:selection.platform,date:selection.date,days:days,price:selection.price,hours:selection.hours,day:day}))
+    
   
   }
   handleDate(month) {
-    alert(month)
+    console.log(month);
+    //let doc = JSON.parse(localStorage.getItem("days") !== null ? localStorage.getItem("days"): '')
+    //console.log(doc)
+    // alert(dayC)
+    let full;
+    let disable = [];
+    let day_arr = []
+    let counter;
     this.props.firebase.database().ref(`/${month}/`).once('value').then((snapshot)=> {
       //snapshot.val().day
-      if(snapshot.val() == null) {
+      if(snapshot.val() != null) {
           snapshot.forEach((DataSnapshot)=>{
-            console.log(DataSnapshot)
+            console.log('hoursLeft', DataSnapshot.val().hoursLeftForPromo)
+            console.log('hours',selection.hours)
+            
+            if(DataSnapshot.val().hoursLeftForPromo <= 0) {
+              console.log('datasnapshot ',DataSnapshot.key, 'year ', new Date().getFullYear());
+              full = `${new Date().getMonth() + 1}-${DataSnapshot.key}-${new Date().getFullYear()}`;
+              console.log('date', full)
+              disable.push(new Date(full))
+            }
+            let hours = DataSnapshot.val().hoursLeftForPromo - selection.hours;
+            if(!isNaN(hours)) { //if theres an actual number meaning dates arent undefined 
+              if(counter < 2) { //duration based on selected days tab
+                if(hours <= 0) { //if the desired selection of hours minus hours left are 0 or less
+                  disable.push(new Date(full)); //then disable that date or dates
+                } else {
+                  day_arr.push(new Date(full)); //if only one date has hours left 0 or less then a push here
+                }
+                counter++;
+              } else if (counter >= 2) { //once we've received the 2 day check
+                if(disable != []) { //if the disable array is not empty, meaning at least one date, 
+                  for(let i = 0; i < day_arr.length; i++) {
+                    disable.push(day_arr[i]) //then iterate over the day_arr which contains the other day even though it wasn't disabled. Since we need consistency if 1 of 2 is disabled then both are
+                  }
+                } disable = [];
+                day_arr = [];
+              }
+              
+            }
+
+
+
           })
+          
+          this.setState({disable:disable})
+        
       } 
     });
-    alert('ghghgh')
+   
   }
 
   render() {
@@ -177,7 +225,7 @@ export class Example extends React.Component {
           <DayPicker
             selectedDays={this.state.selectedDay}
             onDayClick={this.handleDayClick}
-            disabledDays={[new Date('2020-03-22'),new Date('2020-03-18')]}
+            disabledDays={this.state.disable}
             initialMonth={new Date()}
             onMonthChange={this.handleDate()}
             
@@ -244,9 +292,9 @@ export function SimpleTabs(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="One Day" {...a11yProps(0)} />
-          <Tab label="Two Days" {...a11yProps(1)} />
-          <Tab label="Three Days" {...a11yProps(2)} />
+          <Tab label="One Day" id="one" {...a11yProps(0)} onClick={()=>{dayC = 'one'}}/>
+          <Tab label="Two Days" id="two" {...a11yProps(1)} onClick={()=>{dayC = 'two'}}/>
+          <Tab label="Three Days" id="three" {...a11yProps(2)} onClick={()=>{dayC = 'three'}}/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -325,9 +373,10 @@ export function Schedule(props) {
               {chosen}
             </div>
             <Button onClick={()=>{
+              if(isAvail === true) {
                localStorage.setItem("promoInfo", JSON.stringify({}))
                window.location.replace('/payment');
-
+              }
             }} variant="contained" color="primary">CHOOSE</Button>
             <div>
               

@@ -96,3 +96,68 @@ hr {
   height: 267px !important;
   background-size: contain;
 }
+
+.makeStyles-card-181 {
+  height: auto !important;
+  max-width: 300px;
+}
+
+input[type="file"] + label {
+  padding: 5px;
+  border-radius: 2px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #f35aee !important;
+  border: 0px solid #333 !important;
+  
+  height: 33px;
+  /* text-align: center; */
+  /* text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.makeStyles-card-127 {
+    width: 100%;
+    margin: 20px 0px;
+    padding: 0px !important;
+    max-width: 500px;
+}
+
+.makeStyles-card-252 {
+  height: auto !important;
+  max-width: 300px;
+}
+.makeStyles-card-152 {
+  height: auto !important;
+
+  max-width: 300px;
+}
+
+.MuiCardActions-root {
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  justify-content: space-between !important;
+}
+
+.MuiTextField-root {
+  width:100% !important;
+}
+
+.MuiOutlinedInput-root {
+  position: relative;
+  border-radius: 4px;
+  width: 100% !important;
+}
+
+.jss362 {
+  height: auto !important;
+  max-width: 300px;
+}
+
+.jss152 {
+  height: auto !important;
+  max-width: 300px;
+}

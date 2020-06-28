@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { withAuthorization } from '../Session';
 import Button from '@material-ui/core/Button';
 import { withFirebase } from '../Firebase';
@@ -19,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import NavigationIcon from '@material-ui/icons/Navigation';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles({
   card: {
@@ -31,8 +32,20 @@ const useStyles = makeStyles({
   },
 });
 
+function onStartedDownload(id) {
+  console.log(`Started downloading: ${id}`);
+}
+
+function onFailed(error) {
+  console.log(`Download failed: ${error}`);
+}
+
+
+
+
 function MediaCard(props) {
   const classes = useStyles();
+  let textRef = useRef()
   let formatDate = (date) => {
     var monthNames = [
       "January", "February", "March",
@@ -47,10 +60,19 @@ function MediaCard(props) {
   
     return monthNames[monthIndex] + ' ' + day + ' ' + year;
   }
+  const copyText = () => {
+    var copyText = document.getElementById(props.date);
+    document.execCommand("Delete");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999)
+    document.execCommand("copy");
+    //alert("Copied the text: " + copyText.value);
+  }
   return (
     <div>
+   
     <Card className={classes.card}>
-      <CardActionArea>
+      {/* <CardActionArea> */}
         <CardMedia
           className={classes.media}
           style={{backgroundImage:`url(${props.image})`,backgroundRepeat:'no-repeat'}}
@@ -60,10 +82,11 @@ function MediaCard(props) {
     
           <Typography variant="body2" color="textSecondary" component="p">
           <p style={{fontWeight:'bold'}}>{formatDate(new Date(props.date))}</p>
-          <p>{props.text}</p>
+          <div style={{display:'flex', width:'100%'}}><TextField type="text" value={props.text} id={props.date} style={{display:'block', width:'100%'}} ref={textRef} variant="outlined"/></div>
           </Typography>
+         
         </CardContent>
-      </CardActionArea>
+      {/* </CardActionArea> */}
       <CardActions>
         <Button size="small" color="primary" onClick={()=>{
           
@@ -112,7 +135,7 @@ function MediaCard(props) {
               
               console.log('d :',date);
               console.log('d :',day_)
-              if(date[`${day_}`].hoursLeftForPromo != 0 ) {
+              if(Math.sign(date[`${day_}`].hoursLeftForPromo) != -1 ) {
                 props.firebase.database().ref(`/${month[month_]}/${day_}`).set(
                   {
                     day:day_,
@@ -122,6 +145,8 @@ function MediaCard(props) {
 
                  
                 });
+              } else {
+
               }
             }   
           }
@@ -174,7 +199,17 @@ function MediaCard(props) {
         {/* <Button size="small" color="primary">
           Learn More
         </Button> */}
-
+        <div style={{display:'flex', flexDirection:'column'}}>
+  <Button onClick={()=>{copyText()}} size="small" style={{marginBottom:10}}>Copy Text</Button>
+  <Button onClick={()=>{
+  let a = document.createElement('a')
+  a.href = props.image
+  a.download = props.image.split('/').pop()
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}} size="small" >Download</Button>
+  </div>
       </CardActions>
     </Card>
     <div style={{margin:10}}>Status: {(()=>{
@@ -186,6 +221,7 @@ function MediaCard(props) {
       return 'Denied!'
     }
   })()}</div>
+  
     </div>
   );
 }
@@ -212,7 +248,7 @@ const Home = (props) => {
     }
 
   }
- return( <div style={{display:'flex',justifyContent:'center'}}>
+ return( <div style={{display:'flex',justifyContent:'center', flexDirection:'column'}}>
     <div style={{maxWidth:800, width:'100%', display:'flex', flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
     <h1>Admin</h1>
     {/* <div style={{margin:'10px 0px'}}>
@@ -238,6 +274,7 @@ const Home = (props) => {
             ? this.state.string
             : 'Please select a day 👻'}</p>
     </div> */}
+    
     <div style={{height:'100%',width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
       <div style={{width:400,height:300}}>
         {/* <h1>My Promos</h1> */}
@@ -261,13 +298,41 @@ const Home = (props) => {
 {list}
       </ItemsCarousel>
     </div>
+
       </div>
+          
     </div>
     </div>
-  </div>) 
+    <div style={{height:'65px',
+    width:'100%',
+    background:'rgb(243, 90, 238)',
+    /* position: absolute; */
+    position:'absolute',
+    bottom: 0}}>
+
+    </div>
+    <div>
+    
+    </div>
+    {/* <div style={{display:'flex', flexDirection:'column', position:'absolute'}}>
+    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+    <div style={{height:20}}></div>
+    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+    </div> */}
+  </div>
+  
+  ) 
 };
 const HomeMain = withFirebase(Home);
 const MCard = withFirebase(MediaCard);
-const condition = authUser => !!authUser;
+const condition = (authUser) =>  {
+  if(authUser != null) {
+    if(authUser.email === 'admin@schedulewithhannah.com') {
+       return true
+     } else {
+     
+     }
+  }
+};
 export default withAuthorization(condition)(HomeMain);
 

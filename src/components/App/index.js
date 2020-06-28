@@ -6,6 +6,8 @@ import { withFirebase } from '../Firebase';
 import Main from '../Main';
 import SignUpPage from '../SignUp';
 import SignInPage from '../SignIn';
+import SignInAdmin from '../SignInAdmin';
+
 import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
@@ -47,6 +49,8 @@ render() {
       <Route exact path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+      <Route path={ROUTES.SIGN_IN_ADMIN} component={SignInAdmin} />
+
       <Route
         path={ROUTES.PASSWORD_FORGET}
         component={PasswordForgetPage}

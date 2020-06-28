@@ -141,17 +141,17 @@ class SignUpFormBase extends Component {
     passwordOne === '' ||
     email === '' ||
     username === '';
-    return (
+    return (<div>
       <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={this.props.classes.paper}>
+      <div className={this.props.classes.paper} style={{width:'100%'}}>
         {/* <Avatar className={classes.avatar}> */}
           {/* <LockOutlinedIcon /> */}
         {/* </Avatar> */}
         <Typography component="h1" variant="h5">
-          {/* Sign Up */}
+          Sign Up
         </Typography>
-        <form className={this.props.classes.form} onSubmit={this.onSubmit} noValidate>
+        <form style={{marginBottom:70}} className={this.props.classes.form} onSubmit={this.onSubmit} noValidate>
           <div style={{display:'flex'}}>
           <TextField
             variant="outlined"
@@ -243,7 +243,6 @@ class SignUpFormBase extends Component {
            <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             id="Instagram"
             label="Instagram"
@@ -254,24 +253,11 @@ class SignUpFormBase extends Component {
             onChange={this.onChange}
             type="text"
           />
+          
            <TextField
             variant="outlined"
             margin="normal"
-            required
-            fullWidth
-            id="Onlyfans"
-            label="Onlyfans"
-            name="onlyfans"
-            autoComplete="Onlyfans"
-      
-            value={onlyfans}
-            onChange={this.onChange}
-            type="text"
-          />
-           <TextField
-            variant="outlined"
-            margin="normal"
-            required
+           
             fullWidth
             id="snapchat"
             label="Snapchat"
@@ -285,7 +271,7 @@ class SignUpFormBase extends Component {
            <TextField
             variant="outlined"
             margin="normal"
-            required
+      
             fullWidth
             id="youtube"
             label="Youtube"
@@ -296,7 +282,20 @@ class SignUpFormBase extends Component {
             onChange={this.onChange}
             type="text"
           />
-          
+          <TextField
+            variant="outlined"
+            margin="normal"
+        
+            fullWidth
+            id="Onlyfans"
+            label="Onlyfans"
+            name="onlyfans"
+            autoComplete="Onlyfans"
+      
+            value={onlyfans}
+            onChange={this.onChange}
+            type="text"
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -324,6 +323,7 @@ class SignUpFormBase extends Component {
             onChange={this.onChange}
             type="password"
           />
+           
       
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -346,16 +346,35 @@ class SignUpFormBase extends Component {
               </Link>
             </Grid> */}
             <Grid item>
+              <div style={{display:'flex', width:'100%', justifyContent:'space-between'}}>
+              <div>
               <Link to="/signin" variant="body2">
                 {"Already have an account? Sign In"}
               </Link>
+              </div>
+              <div style={{marginLeft:92}}>
+              <Link to="/signinadmin" variant="body2">
+                {"Admin Sign In"}
+              </Link>
+              </div>
+              </div>
             </Grid>
           </Grid>
           {error && <p>{error.message}</p>}
         </form>
+    
       </div>
 
     </Container>
+    <div style={{height:'65px',
+    width:'100%',
+    background:'rgb(243, 90, 238)',
+    /* position: absolute; */
+    position:'relative',
+    bottom: 0}}>
+
+    </div>
+    </div>
     );
   }
 }

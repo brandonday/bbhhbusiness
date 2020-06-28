@@ -27,7 +27,7 @@
     ]
   },
   "storage": {
-    "rules": "storage.rules"
+    "rules": "n"
   },
   "emulators": {
     "functions": {

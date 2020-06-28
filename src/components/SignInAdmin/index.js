@@ -19,7 +19,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-const SignInPage = () => (
+const SignInAdmin = () => (
   <div>
     {/* <h1>SignIn</h1> */}
     <SignInForm />
@@ -68,7 +68,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push('admin');
       })
       .catch(error => {
         this.setState({ error });
@@ -110,7 +110,7 @@ class SignInFormBase extends Component {
     {/* <LockOutlinedIcon /> */}
   {/* </Avatar> */}
   <Typography component="h1" variant="h5">
-    Sign In
+    Admin Sign In
   </Typography>
   <form className={this.props.classes.form} onSubmit={this.onSubmit} noValidate>
     {/* <div style={{display:'flex'}}>
@@ -191,18 +191,14 @@ class SignInFormBase extends Component {
     </Button>
     <Grid container>
       <Grid item xs>
-      <div style={{display:'flex', width:'100%', justifyContent:'space-between'}}>
-              <div>
-              <Link to="/signin" variant="body2">
-                {"Already have an account? Sign In"}
-              </Link>
-              </div>
-              <div style={{marginLeft:40}}>
-              <Link to="/signinadmin" variant="body2">
-                {"Admin Sign In"}
-              </Link>
-              </div>
-              </div>
+        {/* <Link to="/pw-forget" variant="body2">
+          Forgot password?
+        </Link> */}
+      </Grid>
+      <Grid item>
+        <Link to="signup" variant="body2">
+          {"Don't have an account? Sign Up"}
+        </Link>
       </Grid>
     </Grid>
     {error && <p>{error.message}</p>}
@@ -225,5 +221,5 @@ const SignInForm = compose(
   withRouter,
   withFirebase,
 )(SignInFormBaseWrap);
-export default SignInPage;
+export default SignInAdmin;
 export { SignInForm };

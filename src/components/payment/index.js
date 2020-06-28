@@ -80,7 +80,7 @@ class Payment extends Component {
     });
   }
   componentWillUnmount() {
-    this.listener();
+    // this.listener.bind(this);
   }
   onToken = (token) => {
     // fetch('/save-stripe-token', {
@@ -89,6 +89,7 @@ class Payment extends Component {
     // }).then(response => {
     //   response.json().then(data => {
         alert(`We are in business`);
+        this.props.history.push('/create')
     //   });
     // });
   }

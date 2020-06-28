@@ -44,9 +44,13 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   media: {
+    marginTop:20,
     height: 300,
     backgroundSize:'contain',
     backgroundColor:'rgba(0, 0, 0, 0.09)',
+    maxWidth:377,
+    width:'100%',
+    borderRadius:7
   },
   card: {
     maxWidth: 500,
@@ -119,7 +123,7 @@ function Create(props) {
         if (error) {
           // The write failed...
         } else {
-          alert('thank you')
+         
           props.firebase.database().ref('user/' + props.firebase.auth.currentUser.uid).push({
             userId:props.firebase.auth.currentUser.uid,
             url:downloadURL,
@@ -153,7 +157,7 @@ function Create(props) {
     //     }
     //   }
     // });
-
+          props.history.push('/')
           
           //window.location.replace('/home')
         }
@@ -200,8 +204,8 @@ function Create(props) {
     <div className="App" style={{padding:20,display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
       <Card className={classes.card}>
         <div style={{width:'100%',justifyContent:'center',alignItems:'center',display:'flex'}}>
-          <div style={{width:350}}>
-            <CardActionArea>
+          <div style={{width:377}}>
+            {/* <CardActionArea> */}
               <CardMedia
                 className={classes.media}
                 image={count}
@@ -209,7 +213,7 @@ function Create(props) {
 
               />
      
-            </CardActionArea>
+            {/* </CardActionArea> */}
           </div>
         </div>
       <div style={{width:'100%'}}>
@@ -221,8 +225,8 @@ function Create(props) {
           multiline
           rows="4"
           defaultValue="Post text"
-          variant="filled"
-          style={{maxWidth:500,width:'100%',margin:20}}
+          variant="outlined"
+          style={{maxWidth:377,width:'100%',margin:20}}
         />
         </div>
       <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -230,7 +234,7 @@ function Create(props) {
       </div>
     </Card>
     <form onSubmit={onSubmit} style={{width:'100%',display:'flex',justifyContent:'center',flexDirection:'row', alignItems:'center'}}>
-        <div style={{maxWidth:500,width:'100%',display:'flex'}}>
+        <div style={{maxWidth:500,width:'100%',display:'flex',flexDirection:'column'}}>
         <input
           id="file"
           type="file"
@@ -243,12 +247,14 @@ function Create(props) {
         />
         <label htmlFor="file">
           <span tabIndex="0" role="button" aria-controls="filename">
-            Upload file(s):{" "}
+           <p style={{color:'white'}}>Upload</p>
           </span>
         </label>
         {fileNames()}
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit" style={{color:'white', backgroundColor:'#f35aee',border:'0px solid #333', height:42}}>
+          Submit
+          </button>
         </div>
       </form>
     </div>
